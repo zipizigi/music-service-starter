@@ -27,7 +27,7 @@ jobs:
 
     - name: build
       env:
-        RELEASE: 1.${{ GITHUB_RUN_NUMBER }}.${{ steps.date.outputs.date }}.${{ steps.slug.outputs.sha8 }}
+        RELEASE: 1.${{ github.run_number }}.${{ steps.date.outputs.date }}.${{ steps.slug.outputs.sha8 }}
       run: |
         chmod +x gradlew
         ./gradlew assembleRelease
@@ -50,7 +50,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: 1.${{ GITHUB_RUN_NUMBER }}.${{ steps.date.outputs.date }}.${{ steps.slug.outputs.sha8 }}
+        tag_name: 1.${{ github.run_number }}.${{ steps.date.outputs.date }}.${{ steps.slug.outputs.sha8 }}
         release_name: Release ${{ steps.date.outputs.date }} - ${{ github.ref }}
         draft: false
         prerelease: false
