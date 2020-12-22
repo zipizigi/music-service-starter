@@ -14,11 +14,21 @@ import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 
 import java.util.List;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
     private final MusicService musicService = new MusicService();
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AppUpdater appUpdater = new AppUpdater(this)
+                .setDisplay(Display.DIALOG)
+                .setUpdateFrom(UpdateFrom.GITHUB)
+                .setGitHubUserAndRepo("zipizigi", "music-service-starter");
+        appUpdater.start();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
         ((TextView) findViewById(R.id.viewLog)).setMovementMethod(new ScrollingMovementMethod());
 
-        AppUpdater appUpdater = new AppUpdater(this)
-                .setDisplay(Display.DIALOG)
-                .setUpdateFrom(UpdateFrom.GITHUB)
-                .setGitHubUserAndRepo("zipizigi", "music-service-starter")
-
-                ;
-        appUpdater.start();
     }
 
     public void onStartMelon(View view) {
