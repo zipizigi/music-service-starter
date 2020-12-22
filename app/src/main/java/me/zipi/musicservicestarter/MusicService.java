@@ -43,9 +43,9 @@ public class MusicService {
 
         try (InputStream inputStream = context.openFileInput(_SAVE_FILE_NAME);
              InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+             BufferedReader bufferedReader = new BufferedReader(inputStreamReader)
         ) {
-            String receiveString = "";
+            String receiveString;
             StringBuilder stringBuilder = new StringBuilder();
 
             while ((receiveString = bufferedReader.readLine()) != null) {
