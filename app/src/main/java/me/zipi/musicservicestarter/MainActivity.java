@@ -9,6 +9,10 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
+import com.github.javiersantos.appupdater.AppUpdater;
+import com.github.javiersantos.appupdater.enums.Display;
+import com.github.javiersantos.appupdater.enums.UpdateFrom;
+
 import java.util.List;
 import java.util.Set;
 
@@ -23,6 +27,14 @@ public class MainActivity extends AppCompatActivity {
         this.onRefresh(null);
 
         ((TextView) findViewById(R.id.viewLog)).setMovementMethod(new ScrollingMovementMethod());
+
+        AppUpdater appUpdater = new AppUpdater(this)
+                .setDisplay(Display.DIALOG)
+                .setUpdateFrom(UpdateFrom.GITHUB)
+                .setGitHubUserAndRepo("zipizigi", "music-service-starter")
+
+                ;
+        appUpdater.start();
     }
 
     public void onStartMelon(View view) {
