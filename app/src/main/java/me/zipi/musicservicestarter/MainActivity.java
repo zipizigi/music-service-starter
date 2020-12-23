@@ -41,63 +41,83 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onStartMelon(View view) {
-        String log = musicService.startService(getApplicationContext(), ServiceEnum.Melon);
-        this.writeLog(log);
-        this.onRefresh(null);
+        new Thread(() -> {
+            String log = musicService.startService(this, ServiceEnum.Melon);
+            this.writeLog(log);
+            this.onRefresh(null);
+        }).start();
     }
 
     public void onStopMelon(View view) {
-        String log = musicService.stopService(getApplicationContext(), ServiceEnum.Melon);
-        this.writeLog(log);
-        this.onRefresh(null);
+        new Thread(() -> {
+            String log = musicService.stopService(this, ServiceEnum.Melon);
+            this.writeLog(log);
+            this.onRefresh(null);
+        }).start();
     }
 
     public void setDefaultMelon(View view) {
-        String log = musicService.saveService(getApplicationContext(), ServiceEnum.Melon);
-        this.writeLog(log);
-        this.onRefresh(null);
+        new Thread(() -> {
+            String log = musicService.saveService(this, ServiceEnum.Melon);
+            this.writeLog(log);
+            this.onRefresh(null);
+        }).start();
     }
 
     public void onStartVibe(View view) {
-        String log = musicService.startService(getApplicationContext(), ServiceEnum.Vibe);
-        this.writeLog(log);
-        this.onRefresh(null);
+        new Thread(() -> {
+            String log = musicService.startService(this, ServiceEnum.Vibe);
+            this.writeLog(log);
+            this.onRefresh(null);
+        }).start();
     }
 
     public void onStopVibe(View view) {
-        String log = musicService.stopService(getApplicationContext(), ServiceEnum.Vibe);
-        this.writeLog(log);
-        this.onRefresh(null);
+        new Thread(() -> {
+            String log = musicService.stopService(this, ServiceEnum.Vibe);
+            this.writeLog(log);
+            this.onRefresh(null);
+        }).start();
     }
 
     public void setDefaultVibe(View view) {
-        String log = musicService.saveService(getApplicationContext(), ServiceEnum.Vibe);
-        this.writeLog(log);
-        this.onRefresh(null);
+        new Thread(() -> {
+            String log = musicService.saveService(this, ServiceEnum.Vibe);
+            this.writeLog(log);
+            this.onRefresh(null);
+        }).start();
     }
 
     public void onRefresh(View view) {
-        ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
-        List<String> services = musicService.getRunningService(am);
-        TextView viewRunningService = (TextView) findViewById(R.id.viewRunningService);
+        new Thread(() -> {
+            ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+            List<String> services = musicService.getRunningService(am);
 
-        StringBuilder sb = new StringBuilder();
-        for (String service : services) {
-            sb.append(service).append("\n");
-        }
-        viewRunningService.setText(sb.toString());
-        TextView appLabel = (TextView) findViewById(R.id.defaultApp);
 
-        appLabel.setText(
-                musicService.loadSavedService(getApplicationContext()).name()
-        );
+            StringBuilder sb = new StringBuilder();
+            for (String service : services) {
+                sb.append(service).append("\n");
+            }
+            runOnUiThread(() -> {
+                TextView viewRunningService = (TextView) findViewById(R.id.viewRunningService);
+                viewRunningService.setText(sb.toString());
+                TextView appLabel = (TextView) findViewById(R.id.defaultApp);
+
+                appLabel.setText(
+                        musicService.loadSavedService(getApplicationContext()).name()
+                );
+            });
+        }).start();
     }
 
     @SuppressLint("SetTextI18n")
     public void writeLog(String log) {
-        TextView viewLog = (TextView) findViewById(R.id.viewLog);
+        this.runOnUiThread(() -> {
+            TextView viewLog = (TextView) findViewById(R.id.viewLog);
 
-        viewLog.setText(viewLog.getText() + "\n" + log);
+            viewLog.setText(viewLog.getText() + "\n" + log);
+        });
     }
+
 
 }

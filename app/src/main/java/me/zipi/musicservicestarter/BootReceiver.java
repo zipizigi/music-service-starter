@@ -6,18 +6,32 @@ import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 
+import com.github.javiersantos.appupdater.AppUpdater;
+import com.github.javiersantos.appupdater.enums.Display;
+import com.github.javiersantos.appupdater.enums.UpdateFrom;
+
 public class BootReceiver extends BroadcastReceiver {
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
-            new Handler().postDelayed(
-                    () -> {
-                        Log.i("boot-receiver", "Start service");
-                        new MusicService().startService(context);
-                    },
-                    5000);
+            Log.i("boot receiver", "received");
+            //new Thread(() -> {
+            new Handler().postDelayed(() -> {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    Log.w("boot receiver", "sleep fail");
+                }
+                new MusicService().startService(context);
+                new AppUpdater(context)
+                        .setDisplay(Display.NOTIFICATION)
+                        .setUpdateFrom(UpdateFrom.GITHUB)
+                        .setGitHubUserAndRepo("zipizigi", "music-service-starter")
+                        .start();
+            }, 5000);
+            //}).start();
         }
     }
 

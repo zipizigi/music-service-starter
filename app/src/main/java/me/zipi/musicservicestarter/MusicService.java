@@ -3,9 +3,11 @@ package me.zipi.musicservicestarter;
 import com.stericson.RootShell.RootShell;
 import com.stericson.RootShell.execution.Command;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
@@ -26,6 +28,7 @@ public class MusicService {
     private static final String _SAVE_FILE_NAME = "SERVICE";
 
     public String saveService(Context ctx, ServiceEnum serviceEnum) {
+        //  Context ctx = activity.getApplicationContext();
         StringBuilder sb = new StringBuilder();
         try (OutputStreamWriter osw = new OutputStreamWriter(ctx.openFileOutput(_SAVE_FILE_NAME, Context.MODE_PRIVATE))) {
             osw.write(serviceEnum.name());
@@ -124,11 +127,11 @@ public class MusicService {
                 else
                     ctx.stopService(i);
             }
-            Toast.makeText(ctx, (isStart ? "Start. " : "Stop. ") + serviceEnum.getPkg(), Toast.LENGTH_SHORT).show();
+            makeToast(ctx, (isStart ? "Start. " : "Stop. ") + serviceEnum.name());
         } catch (Exception e) {
             sb.append("Error: ").append(e.toString());
 
-            Toast.makeText(ctx, "fail. " + serviceEnum.getPkg(), Toast.LENGTH_SHORT).show();
+            makeToast(ctx, "fail. " + serviceEnum.name());
         }
 
         return sb.toString();
@@ -147,6 +150,33 @@ public class MusicService {
             }
         }
         return result;
+    }
+
+    private void makeToast(Context ctx, String text) {
+        Activity activity = getActivity(ctx);
+        if (activity != null) {
+            activity.runOnUiThread(() -> Toast.makeText(ctx, text, Toast.LENGTH_SHORT).show());
+        } else {
+            try {
+                Toast.makeText(ctx, text, Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Log.w("makeToast", "fail make toast", e);
+            }
+        }
+    }
+
+    public Activity getActivity(Context context) {
+        if (context == null) {
+            return null;
+        } else if (context instanceof ContextWrapper) {
+            if (context instanceof Activity) {
+                return (Activity) context;
+            } else {
+                return getActivity(((ContextWrapper) context).getBaseContext());
+            }
+        }
+
+        return null;
     }
 }
 
