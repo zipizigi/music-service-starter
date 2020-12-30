@@ -19,11 +19,6 @@ public class BootReceiver extends BroadcastReceiver {
             Log.i("boot receiver", "received");
             //new Thread(() -> {
             new Handler().postDelayed(() -> {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    Log.w("boot receiver", "sleep fail");
-                }
                 new MusicService().startService(context);
                 new AppUpdater(context)
                         .setDisplay(Display.NOTIFICATION)
