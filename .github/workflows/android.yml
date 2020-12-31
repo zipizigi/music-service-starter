@@ -61,7 +61,7 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
         asset_path: ${{steps.sign_app.outputs.signedReleaseFile}}
-        asset_name: music-service-starter.apk
+        asset_name: music-service-starter_1.0.${{ github.run_number }}.apk
         asset_content_type: application/vnd.android.package-archive
     # Example use of `signedReleaseFile` output -- not needed
     - uses: actions/upload-artifact@v2
