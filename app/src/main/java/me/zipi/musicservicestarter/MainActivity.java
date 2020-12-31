@@ -1,9 +1,13 @@
 package me.zipi.musicservicestarter;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -15,6 +19,9 @@ import com.github.javiersantos.appupdater.enums.UpdateFrom;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class MainActivity extends AppCompatActivity {
 
     private final MusicService musicService = new MusicService();
@@ -38,6 +45,16 @@ public class MainActivity extends AppCompatActivity {
 
         ((TextView) findViewById(R.id.viewLog)).setMovementMethod(new ScrollingMovementMethod());
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                log.debug("Permission is granted");
+            } else {
+                log.warn("Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+
+            }
+        }
     }
 
     public void onStartMelon(View view) {
@@ -111,11 +128,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("SetTextI18n")
-    public void writeLog(String log) {
+    public void writeLog(String logString) {
         this.runOnUiThread(() -> {
             TextView viewLog = (TextView) findViewById(R.id.viewLog);
 
-            viewLog.setText(viewLog.getText() + "\n" + log);
+            viewLog.setText(viewLog.getText() + "\n" + logString);
+
+            log.info(logString);
         });
     }
 

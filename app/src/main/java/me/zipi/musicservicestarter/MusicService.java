@@ -23,6 +23,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class MusicService {
 
     private static final String _SAVE_FILE_NAME = "SERVICE";
@@ -34,7 +37,7 @@ public class MusicService {
             osw.write(serviceEnum.name());
             sb.append("Save service success: ").append(serviceEnum.toString());
         } catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
+            log.warn("save setting error", e);
             sb.append("Save fail: ").append(serviceEnum.toString())
                     .append("\n").append(e.toString());
         }
@@ -57,10 +60,8 @@ public class MusicService {
 
             serviceEnum = ServiceEnum.valueOf(stringBuilder.toString().trim());
 
-        } catch (FileNotFoundException e) {
-            Log.e("login activity", "File not found: " + e.toString());
         } catch (IOException e) {
-            Log.e("login activity", "Can not read file: " + e.toString());
+            log.warn("file not found or read fail", e);
         }
 
         return serviceEnum;
@@ -160,7 +161,7 @@ public class MusicService {
             try {
                 Toast.makeText(ctx, text, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
-                Log.w("makeToast", "fail make toast", e);
+                log.warn("make toast fail", e);
             }
         }
     }
